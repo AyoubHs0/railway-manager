@@ -305,3 +305,23 @@ function annulerTicket() {
 
     console.log("\nTicket annulé avec succès.\n");
 }
+function rechercherTicket() {
+
+    const name = prompt("Nom du passager : ");
+
+    let result = [];
+
+    for (let i = 0; i < tickets.length; i++) {
+
+        if (tickets[i].passengerName.toLowerCase().includes(name.toLowerCase())) {
+            result.push(tickets[i]);
+        }
+    }
+
+    if (result.length === 0) {
+        console.log("\nAucun ticket trouvé pour ce passager.\n");
+        return;
+    }
+
+    afficherTickets(result);
+}
