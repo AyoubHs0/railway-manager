@@ -205,18 +205,21 @@ function afficherTrajets(trips) {
 function acheterTicket() {
     let nom = prompt("Nom : ");
     let id = Number(prompt("Id du trajet : "));
-
     for (let i = 0; i < trips.length; i++) {
-
         if (trips[i].id === id) {
-
             if (trips[i].availableSeats === 0) {
                 console.log("Train complet");
                 return;
             }
-
-            let seat = 51 - trips[i].availableSeats;
-
+            // chercher le premier siège libre
+            let seat = 1;
+            for (let j = 0; j < tickets.length; j++) {
+                if (tickets[j].tripId === trips[i].id &&
+                    tickets[j].seatNumber === seat) {
+                    seat++;
+                    j = -1;
+                }
+            }
             let ticket = {
                 id: nextTicketId,
                 passengerName: nom,
@@ -224,14 +227,11 @@ function acheterTicket() {
                 seatNumber: seat,
                 price: trips[i].price
             };
-
             tickets.push(ticket);
             nextTicketId++;
             trips[i].availableSeats--;
-
             console.log("Ticket acheté avec succès");
             console.log(ticket);
-
             return;
         }
     }
@@ -270,4 +270,38 @@ function afficherTickets(list = tickets) {
         console.log(`Place : ${ticket.seatNumber}`);
         console.log(`Prix : ${ticket.price} DH\n`);
     });
+}
+//fonction pour annuler ticket
+function annulerTicket() {
+
+    const ticketId = parseInt(prompt("Identifiant du ticket : "));
+
+    let index = -1;
+
+    for (let i = 0; i < tickets.length; i++) {
+
+        if (tickets[i].id === ticketId) {
+            index = i;
+            break;
+        }
+    }
+
+    if (index === -1) {
+        console.log("Ticket introuvable.");
+        return;
+    }
+
+    const ticket = tickets[index];
+
+    for (let i = 0; i < trips.length; i++) {
+
+        if (trips[i].id === ticket.tripId) {
+            trips[i].availableSeats++;
+            break;
+        }
+    }
+
+    tickets.splice(index, 1);
+
+    console.log("\nTicket annulé avec succès.\n");
 }
