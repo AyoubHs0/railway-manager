@@ -186,6 +186,7 @@ const trips = [
 
 const tickets = [];
 let nextTicketId = 1;
+//fonction pour aficher les trajet
 
 function afficherTrajets(trips) {
     console.log("\n=== TRAJETS DISPONIBLES ===\n");
@@ -199,5 +200,73 @@ function afficherTrajets(trips) {
         console.log(`Arrivée : ${trip.arrivalTime}`);
         console.log(`Prix : ${trip.price} DH`);
         console.log(`Places disponibles : ${trip.availableSeats}\n`);
+    });
+}
+// fonction pour achter un ticket
+function acheterTicket() {
+
+    let nom = prompt("Nom : ");
+    let id = Number(prompt("Id du trajet : "));
+
+    for (let i = 0; i < trips.length; i++) {
+
+        if (trips[i].id === id) {
+
+            if (trips[i].availableSeats === 0) {
+                console.log("Train complet");
+                return;
+            }
+
+            let ticket = {
+                id: nextTicketId,
+                passengerName: nom,
+                tripId: trips[i].id,
+                seatNumber: 1,
+                price: trips[i].price
+            };
+
+            tickets.push(ticket);
+            nextTicketId++;
+            trips[i].availableSeats--;
+
+            console.log("Ticket acheté avec succès");
+            console.log(ticket);
+    
+            return;
+        }
+    }
+    console.log("Trajet introuvable");
+}
+// fonction pour  afficher les tickets
+function afficherTickets(list = tickets) {
+    console.log("\n=== TICKETS ===\n");
+
+    if (list.length === 0) {
+        console.log("Aucun ticket enregistré.\n");
+        return;
+    }
+
+    list.forEach(ticket => {
+
+        let trip = null;
+
+        for (let i = 0; i < trips.length; i++) {
+            if (trips[i].id === ticket.tripId) {
+                trip = trips[i];
+                break;
+            }
+        }
+
+        console.log(`Ticket #${ticket.id}`);
+        console.log(`Passager : ${ticket.passengerName}`);
+
+        if (trip !== null) {
+            console.log(`Trajet : ${trip.departure} → ${trip.destination}`);
+        } else {
+            console.log(`Trajet : Trajet inconnu`);
+        }
+
+        console.log(`Place : ${ticket.seatNumber}`);
+        console.log(`Prix : ${ticket.price} DH\n`);
     });
 }
