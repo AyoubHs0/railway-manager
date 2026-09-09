@@ -186,7 +186,6 @@ const trips = [
 
 const tickets = [];
 let nextTicketId = 1;
-//fonction pour aficher les trajet
 
 function afficherTrajets(trips) {
     console.log("\n=== TRAJETS DISPONIBLES ===\n");
@@ -204,7 +203,6 @@ function afficherTrajets(trips) {
 }
 // fonction pour achter un ticket
 function acheterTicket() {
-
     let nom = prompt("Nom : ");
     let id = Number(prompt("Id du trajet : "));
 
@@ -217,11 +215,13 @@ function acheterTicket() {
                 return;
             }
 
+            let seat = 51 - trips[i].availableSeats;
+
             let ticket = {
                 id: nextTicketId,
                 passengerName: nom,
                 tripId: trips[i].id,
-                seatNumber: 1,
+                seatNumber: seat,
                 price: trips[i].price
             };
 
@@ -231,10 +231,11 @@ function acheterTicket() {
 
             console.log("Ticket acheté avec succès");
             console.log(ticket);
-    
+
             return;
         }
     }
+
     console.log("Trajet introuvable");
 }
 // fonction pour  afficher les tickets
