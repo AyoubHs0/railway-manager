@@ -184,8 +184,49 @@ const trips = [
 
 
 
-const tickets = [];
-let nextTicketId = 1;
+const tickets = [
+    {
+        id: 1,
+        passengerName: "Ahmed",
+        tripId: 2,
+        seatNumber: 1,
+        price: 90
+    },
+    {
+        id: 2,
+        passengerName: "Sara",
+        tripId: 1,
+        seatNumber: 1,
+        price: 25
+    },
+    {
+        id: 3,
+        passengerName: "Ahmed",
+        tripId: 6,
+        seatNumber: 1,
+        price: 120
+    },
+    {
+        id: 4,
+        passengerName: "Yassine",
+        tripId: 2,
+        seatNumber: 2,
+        price: 90
+    }
+];
+//fonction pour mettre ajour des places ============================================
+function mettreAJourPlaces() {
+    for (let i = 0; i < trips.length; i++) {
+        let count = 0;
+        for (let j = 0; j < tickets.length; j++) {
+            if (tickets[j].tripId === trips[i].id) {
+                count++;
+            }
+        }
+        trips[i].availableSeats = 50 - count;
+    }
+}
+let nextTicketId = 5;
 //fonction pour afficher les trajets =================================================
 
 function afficherTrajets(trips) {
@@ -346,15 +387,130 @@ function filtrerTrajets() {
 
     console.log("");
 }
-// fonction pour trier les trajets par prix
+// fonction pour trier les trajets par prix ===============================================
 function trierTrajets() {
-    const sorted = [...trips].sort((a, b) => a.price - b.price);
-
+    const sorted = [...trips];
+    for (let i = 0; i < sorted.length - 1; i++) {
+        let min = i;
+        for (let j = i + 1; j < sorted.length; j++) {
+            if (sorted[j].price < sorted[min].price) {
+                min = j;
+            }
+        }
+        let temp = sorted[i];
+        sorted[i] = sorted[min];
+        sorted[min] = temp;
+    }
     console.log("\n=== TRAJETS TRIÉS PAR PRIX CROISSANT ===\n");
-
-    sorted.forEach(t => {
-        console.log(`${t.departure} → ${t.destination} : ${t.price} DH`);
-    });
-
-    console.log("");
+    for (let i = 0; i < sorted.length; i++) {
+        console.log(
+            `${sorted[i].departure} → ${sorted[i].destination} : ${sorted[i].price} DH`
+        );
+    }
 }
+// fonction pour afficher les stastistique =====================================
+function afficherStatistiques() {
+    console.log("\n=== STATISTIQUES ===\n");
+    console.log(`Nombre total de tickets : ${tickets.length}`);
+    let revenue = 0;
+    for (let i = 0; i < tickets.length; i++) {
+        revenue = revenue + tickets[i].price;
+    }
+    console.log(`Chiffre d'affaires total : ${revenue} DH`);
+    if (tickets.length === 0) {
+        return;
+    }
+    let counts = {};
+    for (let i = 0; i < tickets.length; i++) {
+        let id = tickets[i].tripId;
+
+        if (counts[id] === undefined) {
+            counts[id] = 1;
+        } else {
+            counts[id] = counts[id] + 1;
+        }
+    }
+    let bestTripId = null;
+    let maxCount = 0;
+
+    for (let id in counts) {
+
+        if (counts[id] > maxCount) {
+            maxCount = counts[id];
+            bestTripId = id;
+        }
+    }
+
+    let bestTrip = null;
+    for (let i = 0; i < trips.length; i++) {
+
+        if (trips[i].id == bestTripId) {
+            bestTrip = trips[i];
+            break;
+        }
+    }
+
+    console.log("\nTrajet le plus vendu :");
+    console.log(`${bestTrip.departure} → ${bestTrip.destination}`);
+    console.log(`${maxCount} tickets vendus\n`);
+}
+//fonction pour afficher le Menu ===========================================================
+function afficherMenu() {
+    console.log("\n=================================");
+    console.log("        RAILWAY MANAGER");
+    console.log("=================================\n");
+    console.log("1. Afficher les trajets");
+    console.log("2. Acheter un ticket");
+    console.log("3. Afficher les tickets");
+    console.log("4. Annuler un ticket");
+    console.log("5. Rechercher un ticket");
+    console.log("6. Filtrer les trajets");
+    console.log("7. Trier les trajets");
+    console.log("8. Statistiques");
+    console.log("0. Quitter\n");
+}
+
+//fonction pour lancer application =========================================================
+function lancerApplication() {
+    let running = true;
+
+    while (running) {
+        afficherMenu();
+        const choix = prompt("Votre choix : ");
+
+        switch (choix) {
+            case "1":
+                afficherTrajets(trips);
+                break;
+            case "2":
+                acheterTicket();
+                break;
+            case "3":
+                afficherTickets();
+                break;
+            case "4":
+                annulerTicket();
+                break;
+            case "5":
+                rechercherTicket();
+                break;
+            case "6":
+                filtrerTrajets();
+                break;
+            case "7":
+                trierTrajets();
+                break;
+            case "8":
+                afficherStatistiques();
+                break;
+            case "0":
+                console.log("\nMerci d'avoir utilisé Railway Manager. À bientôt !\n");
+                running = false;
+                break;
+            default:
+                console.log("\nChoix invalide, veuillez réessayer.\n");
+        }
+    }
+}
+mettreAJourPlaces();
+lancerApplication();
