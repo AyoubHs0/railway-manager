@@ -345,7 +345,7 @@ function annulerTicket() {
 }
 //fonction pour rechercher  a un ticket =============================================
 function rechercherTicket() {
-    const name = prompt("Nom du passager : ");
+    const name = prompt("Nom du passager : ").trim();
     let result = [];
     for (let i = 0; i < tickets.length; i++) {
         if (tickets[i].passengerName.toLowerCase().includes(name.toLowerCase())) {
