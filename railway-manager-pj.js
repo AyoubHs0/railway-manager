@@ -417,42 +417,6 @@ function afficherStatistiques() {
         revenue = revenue + tickets[i].price;
     }
     console.log(`Chiffre d'affaires total : ${revenue} DH`);
-    if (tickets.length === 0) {
-        return;
-    }
-    let counts = {};
-    for (let i = 0; i < tickets.length; i++) {
-        let id = tickets[i].tripId;
-
-        if (counts[id] === undefined) {
-            counts[id] = 1;
-        } else {
-            counts[id] = counts[id] + 1;
-        }
-    }
-    let bestTripId = null;
-    let maxCount = 0;
-
-    for (let id in counts) {
-
-        if (counts[id] > maxCount) {
-            maxCount = counts[id];
-            bestTripId = id;
-        }
-    }
-
-    let bestTrip = null;
-    for (let i = 0; i < trips.length; i++) {
-
-        if (trips[i].id == bestTripId) {
-            bestTrip = trips[i];
-            break;
-        }
-    }
-
-    console.log("\nTrajet le plus vendu :");
-    console.log(`${bestTrip.departure} → ${bestTrip.destination}`);
-    console.log(`${maxCount} tickets vendus\n`);
 }
 //fonction pour afficher le Menu ===========================================================
 function afficherMenu() {
